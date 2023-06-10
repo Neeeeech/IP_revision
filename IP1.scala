@@ -87,10 +87,10 @@ object IP1 {
       * @return index separating the partitions
       */
     def partition(a: Array[Int], l: Int, r: Int): Int = {
-        require(0 <= l && l <= r && r <= a.length)
+        require(0 <= l && l < r && r <= a.length)
         var (x, y) = (l, r)
-        // I: a[l, x) < a(x) = a_0(l) <= a[y, r) && x <= y && a = a_0
-        while (x < y) {
+        // I: a[l, x) < a(x) = a_0(l) <= a[y, r) && x + 1 <= y && a = a_0
+        while (x + 1 < y) {
             if (a(x + 1) < a(x)) {
                 swap(a, x, x+1)
                 x += 1
@@ -103,7 +103,29 @@ object IP1 {
                 x += 1; y -= 1
             }
         }
-        // x = y, so a[l,x) < a(x) = a_0(l) <= a[x, r) && a = a_0
+        // x + 1 = y, so a[l,x) < a(x) = a_0(l) <= a[x + 1, r) && a = a_0
         x
+    }
+
+    /** quickSorts the array between l and r
+      *
+      * @param a the array
+      * @param l left bound inclusive
+      * @param r right bound exclusive
+      */
+    def quickSort(a: Array[Int], l: Int, r: Int): Unit = {
+        // QuickSort takes on average O(n log n) time, with O(n^2) in the worst case
+        // but, you could find the median in O(n) time to force the partitions to be equal
+        // this would force quicksort to run in O(n log n) time, by Master's Theorem (T(n) = 2T(n/2) + O(n))
+        // but I won't do it here bc finding the median in O(n) time is difficult and I doubt we'll be asked to do it
+
+        var x = l
+        // I: x <= r && a is a permutation of a_0 && a[l, x) sorted, and a[l, x) < a[x, r)
+        while (x < r) {
+            val p = partition(a, x, r)
+            quickSort(a, l, p)
+            x = p + 1
+        }
+        // x = r, so a[l,r) is sorted
     }
 }
