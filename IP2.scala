@@ -33,7 +33,6 @@ object IP2 {
         /** Adds x to the linked list
           *
           * @param x element to add
-          * @return 
           */
         def add(x: Int): Unit = head.next = Node(x, head.next)
 
@@ -57,6 +56,63 @@ object IP2 {
                 n = n.next
             }
             (s + "]")
+        }
+    }
+
+    class Queue[T](val defaultVal: T) {
+        // state s : [T]
+        // init  s = []
+        // abs:  s = L(first.next)
+        // DTI:  last.next == null && last reachable from first
+
+        var first = Node[T](defaultVal, null)
+        var last  = first
+
+        /** Adds x to the end of queue
+          *
+          * pre:  none
+          * post: s = s_0 ++ [x]
+          * 
+          * @param x element to enqueue
+          */
+        def enqueue(x: T): Unit = {
+            last.next = Node(x, null)
+            last = last.next
+        }
+
+        /** Removes & returns first in queue
+          * 
+          * pre:  !isEmpty
+          * post: returns x s.t. x : s = s_0
+          *
+          * @return first in queue
+          */
+        def dequeue(): T = {
+            require(first.next != null)
+            val t = first.next.datum
+            first.next = first.next.next
+            t
+        }
+
+        /** Checks if empty
+          * 
+          * pre:  none
+          * post: s = s_0 && returns s = []
+          *
+          * @return if empty
+          */
+        def isEmpty: Boolean = first.next == null
+
+        /** Returns first in queue
+          * 
+          * pre:  !isEmpty
+          * post: s = s_0 && returns head(s)
+          *
+          * @return
+          */
+        def front: T = {
+            require(first.next != null)
+            first.next.datum
         }
     }
 
