@@ -63,7 +63,7 @@ object IP2 {
         // state s : [T]
         // init  s = []
         // abs:  s = L(first.next)
-        // DTI:  last.next == null && last reachable from first
+        // DTI:  last.next == null && last reachable from first && L(first) finite
 
         var first = Node[T](defaultVal, null)
         var last  = first
@@ -113,6 +113,58 @@ object IP2 {
         def front: T = {
             require(first.next != null)
             first.next.datum
+        }
+    }
+
+    class Stack[T](val defaultVal: T) {
+        // state s: [T]
+        // init  s = []
+        val head = Node(defaultVal, null)
+        // abs: s = L(head.next)
+        // DTI: len(L(head.next)) >= 0 && L(head) finite
+
+        /** pushes x to top of stack
+          * 
+          * pre:  none
+          * post: s = [x] ++ s_0
+          *
+          * @param x element to push
+          */
+        def push(x: T): Unit = head.next = Node(x, head.next)
+
+        /** removes and returns top of stack
+          * 
+          * pre:  L(head.next) non-empty
+          * post: returns x s.t. s_0 = [x] ++ s
+          *
+          * @return top of stack
+          */
+        def pop(): T = {
+            require(!isEmpty)
+            val t = head.next.datum
+            head.next = head.next.next
+            t
+        }
+
+        /** returns whether stack is empty
+          * 
+          * pre:  none
+          * post: s = s_0 && returns whether stack is empty
+          *
+          * @return whether stack is empty
+          */
+        def isEmpty: Boolean = head.next == null
+
+        /** returns top of stack without removing
+          * 
+          * pre:  L(head.next) non-empty
+          * post: returns head(s)
+          *
+          * @return top of stack
+          */
+        def top: T = {
+            require(!isEmpty)
+            head.next.datum
         }
     }
 
